@@ -1,3 +1,3 @@
-# pure-ruby-sandbox
+# ruby-crawler-sandbox
 
-Sandbox for pure ruby.
+Sandbox for ruby crawler.
