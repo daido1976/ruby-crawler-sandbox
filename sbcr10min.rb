@@ -1,9 +1,10 @@
 require 'cgi'
+require 'kconv'
 require 'open-uri'
 
 TITLE = 'WWW.SBCR.JP トピックス'
 URL = 'https://www.sbcr.jp/topics/'
-PAGE_SRC = open('https://www.sbcr.jp/topics/', &:read)
+PAGE_SRC = open('https://www.sbcr.jp/topics/', &:read).toutf8
 
 def parse(page_src)
   dates = page_src.scan(/(\d+)年(\d+)月(\d+| \d+)日<br \/>/)
