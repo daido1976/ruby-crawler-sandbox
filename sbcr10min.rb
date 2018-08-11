@@ -1,8 +1,9 @@
 require 'cgi'
+require 'open-uri'
 
 TITLE = 'WWW.SBCR.JP トピックス'
 URL = 'https://www.sbcr.jp/topics/'
-PAGE_SRC = `/usr/local/bin/wget -q -O- https://www.sbcr.jp/topics/`
+PAGE_SRC = open('https://www.sbcr.jp/topics/', &:read)
 
 def parse(page_src)
   dates = page_src.scan(/(\d+)年(\d+)月(\d+| \d+)日<br \/>/)
