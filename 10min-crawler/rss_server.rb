@@ -2,6 +2,8 @@ require 'cgi'
 require 'kconv'
 require 'open-uri'
 require 'rss'
+require 'webrick'
+require 'pry'
 
 TITLE = 'WWW.SBCR.JP トピックス'
 URL = 'https://www.sbcr.jp/topics/'
@@ -73,10 +75,24 @@ class RSSFormatter < Formatter
   end
 end
 
-site = SbcrTopics.new(url: URL, title: TITLE)
+class RSSServlet < WEBrick::HTTPServlet::AbstractServlet
+  def do_GET(req, res)
+    klass, opts = @options
+    res.body = klass.new(opts).output(RSSFormatter).to_s
+    res.content_type = 'application/xml; charset=utf-8'
+  end
+end
 
-if ARGV.first == 'format_rss'
-  puts site.output(RSSFormatter)
+def start_server
+  srv = WEBrick::HTTPServer.new(Port: 3000, BindAddress: '127.0.0.1')
+  srv.mount('/rss.xml', RSSServlet, SbcrTopics, url: URL, title: TITLE)
+  trap('INT') { srv.shutdown }
+  srv.start
+end
+
+if ARGV.first == 'server'
+  start_server
 else
-  puts site.output(TextFormatter)
+  site = SbcrTopics.new(url: URL, title: TITLE)
+  ARGV.first == 'format_rss' ? puts(site.output RSSFormatter) : puts(site.output TextFormatter)
 end
