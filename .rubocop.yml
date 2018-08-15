@@ -35,3 +35,7 @@ Lint/AmbiguousBlockAssociation:
 # Use only ascii symbols in comments. を無視
 Style/AsciiComments:
   Enabled: false
+
+# Use snake_case for method names. を無視
+Naming/MethodName:
+  Enabled: false
